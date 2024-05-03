@@ -1,0 +1,130 @@
+package com.gabsa.canvastictactoe.presentation
+
+import androidx.lifecycle.ViewModel
+import com.gabsa.canvastictactoe.domain.model.BoardCellValue
+import com.gabsa.canvastictactoe.domain.model.GameStatus
+import com.gabsa.canvastictactoe.domain.model.UserActions
+import com.gabsa.canvastictactoe.domain.model.VictoryType
+import com.gabsa.canvastictactoe.domain.model.VictoryType.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+class GameViewModel : ViewModel() {
+
+    private val _state = MutableStateFlow(GameStatus())
+    val state = _state.asStateFlow()
+
+    var boardITens = mutableMapOf<Int, BoardCellValue>()
+
+    init {
+        createBoardItems()
+    }
+
+    fun onBoardClicked(action: UserActions) {
+        when (action) {
+            is UserActions.BoardTapped -> addValueToBoard(action.cellPosition)
+            is UserActions.PlayerAgainButtonClicked -> {
+                createBoardItems()
+                _state.value = GameStatus()
+            }
+        }
+    }
+
+    private fun addValueToBoard(cellPosition: Int) {
+        if (boardITens[cellPosition] != BoardCellValue.NONE) {
+            return
+        }
+
+        val newHintText = if (_state.value.currentTurn == BoardCellValue.CIRCLE) {
+            "Player X turn"
+        } else {
+            "Player O turn"
+        }
+
+        val newTurn = if (_state.value.currentTurn == BoardCellValue.CIRCLE) {
+            BoardCellValue.CROSS
+        } else {
+            BoardCellValue.CIRCLE
+        }
+
+        boardITens[cellPosition] = _state.value.currentTurn
+        if (isDrawGame()) {
+            return
+        }
+
+        if (checkWinner() != NONE) {
+            setWinnerInformation()
+            return
+        }
+        _state.value = _state.value.copy(
+            hintText = newHintText,
+            currentTurn = newTurn
+        )
+    }
+
+    private fun setWinnerInformation() {
+        _state.value = _state.value.copy(
+            hintText = "${checkWinner().name} wins"
+        )
+        countWinnerScore()
+    }
+
+    private fun countWinnerScore() {
+        return when (checkWinner()) {
+            CROSS_VICTORY -> {
+                _state.value = _state.value.copy(
+                    playerCrossCount = _state.value.playerCrossCount + 1
+                )
+            }
+
+            CIRCLE_VICTORY -> {
+                _state.value = _state.value.copy(
+                    playerCircleCount = _state.value.playerCircleCount + 1
+                )
+            }
+            NONE -> Unit
+        }
+    }
+
+    private fun isDrawGame(): Boolean {
+        return if (boardITens.containsValue(BoardCellValue.NONE)) {
+            false
+        } else {
+            _state.value = _state.value.copy(
+                hintText = "Draw game",
+                drawCount = _state.value.drawCount + 1
+            )
+            true
+        }
+    }
+
+    private fun checkWinner(): VictoryType {
+        val winningCombinations = listOf(
+            listOf(1, 2, 3), listOf(4, 5, 6), listOf(7, 8, 9),
+            listOf(1, 4, 7), listOf(2, 5, 8), listOf(3, 6, 9),
+            listOf(1, 5, 9), listOf(3, 5, 7)
+        )
+
+        for (combination in winningCombinations) {
+            val symbols = combination.map { boardITens[it] }
+            if (symbols.all { it == BoardCellValue.CIRCLE }) {
+                return CIRCLE_VICTORY
+            } else if (symbols.all { it == BoardCellValue.CROSS }) {
+                return CROSS_VICTORY
+            }
+        }
+        return NONE
+    }
+
+    private fun createBoardItems() {
+        for (position in 1..9) {
+            boardITens[position] = BoardCellValue.NONE
+        }
+    }
+
+    fun resetGame() {
+        onBoardClicked(
+            UserActions.PlayerAgainButtonClicked
+        )
+    }
+}

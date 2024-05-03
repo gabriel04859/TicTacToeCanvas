@@ -1,4 +1,4 @@
-package com.gabsa.canvastictactoe.ui.theme
+package com.gabsa.canvastictactoe.presentation.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.gabsa.canvastictactoe.ui.components
+package com.gabsa.canvastictactoe.presentation.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.padding
@@ -9,7 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gabsa.canvastictactoe.ui.theme.CrossLineColor
+import com.gabsa.canvastictactoe.presentation.theme.CrossLineColor
 
 @Composable
 fun Cross() {

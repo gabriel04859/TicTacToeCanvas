@@ -1,4 +1,4 @@
-package com.gabsa.canvastictactoe.ui.theme
+package com.gabsa.canvastictactoe.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
