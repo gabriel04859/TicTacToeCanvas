@@ -12,13 +12,15 @@ import com.gabsa.canvastictactoe.domain.model.BoardCellValue
 @Composable
 fun BoardCell(
     cellValue: BoardCellValue,
-    onCellClicked: () -> Unit
+    onCellClicked: () -> Unit,
+    isEnable: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
             .clickable(
+                enabled = isEnable,
                 interactionSource = MutableInteractionSource(),
                 indication = null,
                 onClick = onCellClicked

@@ -1,5 +1,8 @@
 package com.gabsa.canvastictactoe.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,12 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gabsa.canvastictactoe.presentation.GameViewModel
 import com.gabsa.canvastictactoe.domain.model.UserActions
+import com.gabsa.canvastictactoe.domain.model.VictoryType
 import com.gabsa.canvastictactoe.presentation.theme.Pink80
 import com.gabsa.canvastictactoe.presentation.theme.PurpleGrey40
 
 @Composable
 fun GameScreen(viewModel: GameViewModel) {
     val state by viewModel.state.collectAsState()
+
+    var currentHeight: Float = 0f
+    var currentWidth: Float = 0f
 
     Column(
         modifier = Modifier
@@ -74,7 +81,11 @@ fun GameScreen(viewModel: GameViewModel) {
                 .background(Pink80),
             contentAlignment = Alignment.Center
         ) {
-            BoardBase()
+            BoardBase({
+                currentHeight = it
+            }, {
+                currentWidth = it
+            })
             LazyVerticalGrid(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
@@ -85,6 +96,7 @@ fun GameScreen(viewModel: GameViewModel) {
                     item {
                         BoardCell(
                             cellValue = cellValue,
+                            isEnable = !state.hasWinner,
                             onCellClicked = {
                                 viewModel.onBoardClicked(
                                     UserActions.BoardTapped(
@@ -94,6 +106,23 @@ fun GameScreen(viewModel: GameViewModel) {
                             }
                         )
                     }
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    visible = state.hasWinner,
+                    enter = fadeIn(tween(2000))
+                ) {
+                    DrawWinnerLine(victoryType = state.victoryType, currentHeight, currentWidth)
                 }
             }
         }
@@ -110,6 +139,32 @@ fun GameScreen(viewModel: GameViewModel) {
         ) {
             Text(text = "Reset game")
         }
+    }
+}
+
+@Composable
+fun DrawWinnerLine(victoryType: VictoryType, currentHeight: Float, currentWidth: Float) {
+    val position = when (victoryType) {
+        VictoryType.HORIZONTAL1 -> currentHeight / 6
+        VictoryType.HORIZONTAL2 -> currentHeight / 2
+        VictoryType.HORIZONTAL3 -> currentHeight * 6 / 7
+        VictoryType.VERTICAL1 -> currentWidth / 6
+        VictoryType.VERTICAL2 -> currentWidth / 2
+        VictoryType.VERTICAL3 -> currentWidth * 6 / 7
+        else -> 0f
+    }
+
+    when (victoryType) {
+        VictoryType.HORIZONTAL1, VictoryType.HORIZONTAL2, VictoryType.HORIZONTAL3 ->
+            VerticalWinLine(position)
+
+        VictoryType.VERTICAL1, VictoryType.VERTICAL2, VictoryType.VERTICAL3 ->
+            HorizontalWinLine(position)
+
+        VictoryType.TRANS1 -> DiagonallyRightWinLine()
+        VictoryType.TRANS2 -> DiagonallyLeftWinLine()
+
+        else -> {}
     }
 }
 

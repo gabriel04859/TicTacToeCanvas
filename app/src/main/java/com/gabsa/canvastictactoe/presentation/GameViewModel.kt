@@ -3,9 +3,9 @@ package com.gabsa.canvastictactoe.presentation
 import androidx.lifecycle.ViewModel
 import com.gabsa.canvastictactoe.domain.model.BoardCellValue
 import com.gabsa.canvastictactoe.domain.model.GameStatus
+import com.gabsa.canvastictactoe.domain.model.PlayerWinner
 import com.gabsa.canvastictactoe.domain.model.UserActions
 import com.gabsa.canvastictactoe.domain.model.VictoryType
-import com.gabsa.canvastictactoe.domain.model.VictoryType.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -52,7 +52,7 @@ class GameViewModel : ViewModel() {
             return
         }
 
-        if (checkWinner() != NONE) {
+        if (checkWinner() != PlayerWinner.NONE) {
             setWinnerInformation()
             return
         }
@@ -64,25 +64,27 @@ class GameViewModel : ViewModel() {
 
     private fun setWinnerInformation() {
         _state.value = _state.value.copy(
-            hintText = "${checkWinner().name} wins"
+            hintText = "${checkWinner().name} wins",
+            hasWinner = true
         )
         countWinnerScore()
     }
 
     private fun countWinnerScore() {
         return when (checkWinner()) {
-            CROSS_VICTORY -> {
+            PlayerWinner.CROSS_VICTORY -> {
                 _state.value = _state.value.copy(
                     playerCrossCount = _state.value.playerCrossCount + 1
                 )
             }
 
-            CIRCLE_VICTORY -> {
+            PlayerWinner.CIRCLE_VICTORY -> {
                 _state.value = _state.value.copy(
                     playerCircleCount = _state.value.playerCircleCount + 1
                 )
             }
-            NONE -> Unit
+
+            PlayerWinner.NONE -> Unit
         }
     }
 
@@ -98,22 +100,44 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun checkWinner(): VictoryType {
+    private fun checkWinner(): PlayerWinner {
         val winningCombinations = listOf(
             listOf(1, 2, 3), listOf(4, 5, 6), listOf(7, 8, 9),
             listOf(1, 4, 7), listOf(2, 5, 8), listOf(3, 6, 9),
             listOf(1, 5, 9), listOf(3, 5, 7)
         )
 
-        for (combination in winningCombinations) {
+        winningCombinations.forEachIndexed { index, combination ->
             val symbols = combination.map { boardITens[it] }
             if (symbols.all { it == BoardCellValue.CIRCLE }) {
-                return CIRCLE_VICTORY
+                checkVictoryType(index)
+                return PlayerWinner.CIRCLE_VICTORY
             } else if (symbols.all { it == BoardCellValue.CROSS }) {
-                return CROSS_VICTORY
+                checkVictoryType(index)
+                return PlayerWinner.CROSS_VICTORY
             }
+
         }
-        return NONE
+
+        return PlayerWinner.NONE
+    }
+
+    private fun checkVictoryType(index: Int) {
+        val currentVictoryType = when (index) {
+            0 -> VictoryType.HORIZONTAL1
+            1 -> VictoryType.HORIZONTAL2
+            2 -> VictoryType.HORIZONTAL3
+            3 -> VictoryType.VERTICAL1
+            4 -> VictoryType.VERTICAL2
+            5 -> VictoryType.VERTICAL3
+            6 -> VictoryType.TRANS1
+            7 -> VictoryType.TRANS2
+            else -> VictoryType.NONE
+        }
+
+        _state.value = _state.value.copy(
+            victoryType = currentVictoryType
+        )
     }
 
     private fun createBoardItems() {

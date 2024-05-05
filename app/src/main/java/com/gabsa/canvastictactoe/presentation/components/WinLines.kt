@@ -1,8 +1,8 @@
 package com.gabsa.canvastictactoe.presentation.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -15,24 +15,26 @@ import com.gabsa.canvastictactoe.presentation.theme.WinLineColor
 fun VerticalWinLine(heightPosition: Float) {
     Canvas(
         modifier = Modifier
-            .size(300.dp)
+            .fillMaxSize()
             .padding(10.dp)
     ) {
         drawLine(
             color = WinLineColor,
             strokeWidth = 10f,
             cap = StrokeCap.Round,
-            start = Offset(x = 0f, y = heightPosition),
-            end = Offset(x = size.height, y = heightPosition)
-        )
+            start = Offset(
+                x = 0f, y = heightPosition),
+                end = Offset(x = size.height, y = heightPosition)
+            )
     }
 }
 
+
 @Composable
-fun HorizontalWinLine(widthPosition: Float) {
+fun HorizontalWinLine(widthPosition: Float,  modifier: Modifier = Modifier) {
     Canvas(
-        modifier = Modifier
-            .size(300.dp)
+        modifier = modifier
+            .fillMaxSize()
             .padding(10.dp)
     ) {
         drawLine(
@@ -46,24 +48,46 @@ fun HorizontalWinLine(widthPosition: Float) {
 }
 
 @Composable
-fun TransWinLine(startPosition: Float, endPosition: Float) {
+fun DiagonallyRightWinLine() {
     Canvas(
         modifier = Modifier
-            .size(300.dp)
-            .padding(10.dp)
+            .fillMaxSize()
     ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
         drawLine(
             color = WinLineColor,
             strokeWidth = 10f,
             cap = StrokeCap.Round,
-            start = Offset(x = startPosition, y = startPosition),
-            end = Offset(x = endPosition, y = endPosition)
+            start = Offset(x = 0.dp.toPx(), y = 0f),
+            end = Offset(x = canvasWidth, y = canvasHeight)
         )
     }
 }
 
-@Preview(showBackground = true)
+@Composable
+fun DiagonallyLeftWinLine(
+    modifier: Modifier = Modifier
+) {
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        drawLine(
+            color = WinLineColor,
+            strokeWidth = 10f,
+            cap = StrokeCap.Round,
+            start = Offset(x = canvasWidth, y = 0f),
+            end = Offset(x = 0.dp.toPx(), y = canvasHeight)
+        )
+    }
+}
+
+@Preview()
 @Composable
 fun VerticalWinLinePreview() {
-    TransWinLine(300f, 0f)
+    DiagonallyLeftWinLine()
 }
