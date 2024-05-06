@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,47 +24,51 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.gabsa.canvastictactoe.presentation.GameViewModel
 import com.gabsa.canvastictactoe.domain.model.UserActions
 import com.gabsa.canvastictactoe.domain.model.VictoryType
-import com.gabsa.canvastictactoe.presentation.theme.Pink80
-import com.gabsa.canvastictactoe.presentation.theme.PurpleGrey40
+import com.gabsa.canvastictactoe.presentation.GameViewModel
+import com.gabsa.canvastictactoe.presentation.theme.BackgroundColor
+import com.gabsa.canvastictactoe.presentation.theme.BoardBackground
+import com.gabsa.canvastictactoe.presentation.theme.CircleLineColor
+import com.gabsa.canvastictactoe.presentation.theme.CrossLineColor
 
 @Composable
 fun GameScreen(viewModel: GameViewModel) {
     val state by viewModel.state.collectAsState()
 
-    var currentHeight: Float = 0f
-    var currentWidth: Float = 0f
+    var currentHeight = 0f
+    var currentWidth = 0f
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PurpleGrey40)
+            .background(BackgroundColor)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     )
     {
+        Text(
+            text = "Tic tac toe", fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Cursive,
+            color = Color.White,
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Player '0' : ${state.playerCircleCount}", fontSize = 16.sp)
-            Text(text = "Draw: ${state.drawCount}", fontSize = 16.sp)
-            Text(text = "Player 'x' : ${state.playerCrossCount}", fontSize = 16.sp)
+            PlayerLabel("Player O", "${state.playerCircleCount}", CircleLineColor)
+            PlayerLabel("Draw", "${state.drawCount}")
+            PlayerLabel("Player X", "${state.playerCrossCount}", CrossLineColor)
         }
-        Text(
-            text = "Tic tac toe", fontSize = 50.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Cursive
-        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,7 +80,7 @@ fun GameScreen(viewModel: GameViewModel) {
                 .clip(
                     RoundedCornerShape(20.dp)
                 )
-                .background(Pink80),
+                .background(BoardBackground),
             contentAlignment = Alignment.Center
         ) {
             BoardBase({
@@ -128,16 +130,20 @@ fun GameScreen(viewModel: GameViewModel) {
         }
         Text(
             modifier = Modifier.wrapContentSize(),
-            text = state.hintText, fontSize = 24.sp,
+            text = state.hintText, fontSize = 24.sp, color = Color.White,
             fontWeight = FontWeight.Bold
         )
 
-        Button(
-            onClick = { viewModel.resetGame() },
-            modifier = Modifier.wrapContentSize(),
-            elevation = ButtonDefaults.buttonElevation(5.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Reset game")
+
+            ButtonMain({ viewModel.resetMatch() }, "Reset match")
+
+            ButtonMain({ viewModel.resetGame() }, "Reset game")
+
         }
     }
 }
