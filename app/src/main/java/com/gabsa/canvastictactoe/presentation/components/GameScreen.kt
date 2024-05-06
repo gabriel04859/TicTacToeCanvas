@@ -1,5 +1,6 @@
 package com.gabsa.canvastictactoe.presentation.components
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -20,16 +21,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gabsa.canvastictactoe.R
 import com.gabsa.canvastictactoe.domain.model.UserActions
 import com.gabsa.canvastictactoe.domain.model.VictoryType
 import com.gabsa.canvastictactoe.presentation.GameViewModel
@@ -42,8 +48,8 @@ import com.gabsa.canvastictactoe.presentation.theme.CrossLineColor
 fun GameScreen(viewModel: GameViewModel) {
     val state by viewModel.state.collectAsState()
 
-    var currentHeight = 0f
-    var currentWidth = 0f
+    var currentHeight by remember { mutableStateOf(0f) }
+    var currentWidth by remember { mutableStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -55,7 +61,7 @@ fun GameScreen(viewModel: GameViewModel) {
     )
     {
         Text(
-            text = "Tic tac toe", fontSize = 40.sp,
+            text = stringResource(id = R.string.game_screen_title), fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive,
             color = Color.White,
@@ -65,9 +71,18 @@ fun GameScreen(viewModel: GameViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PlayerLabel("Player O", "${state.playerCircleCount}", CircleLineColor)
-            PlayerLabel("Draw", "${state.drawCount}")
-            PlayerLabel("Player X", "${state.playerCrossCount}", CrossLineColor)
+
+            PlayerLabel(
+                stringResource(id = R.string.game_screen_player_o),
+                "${state.playerCircleCount}",
+                CircleLineColor
+            )
+            PlayerLabel(stringResource(id = R.string.game_screen_player_x), "${state.drawCount}")
+            PlayerLabel(
+                stringResource(id = R.string.game_screen_player_x),
+                "${state.playerCrossCount}",
+                CrossLineColor
+            )
         }
         Box(
             modifier = Modifier
@@ -140,9 +155,9 @@ fun GameScreen(viewModel: GameViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
 
-            ButtonMain({ viewModel.resetMatch() }, "Reset match")
+            ButtonMain({ viewModel.resetMatch() }, stringResource(id = R.string.game_screen_resent_game_match))
 
-            ButtonMain({ viewModel.resetGame() }, "Reset game")
+            ButtonMain({ viewModel.resetGame() }, stringResource(id = R.string.game_screen_resent_game_button))
 
         }
     }
