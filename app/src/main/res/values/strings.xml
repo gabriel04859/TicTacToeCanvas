@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">CanvasTicTacToe</string>
+
+    <!-- GameScreen -->
+    <string name="game_screen_title">Tic tac toe</string>
+    <string name="game_screen_player_o">Player O</string>
+    <string name="game_screen_player_x">Player X</string>
+    <string name="game_screen_drawn">Draw</string>
+    <string name="game_screen_resent_game_button">Reset game</string>
+    <string name="game_screen_resent_game_match">Reset match</string>
+
+    <!-- GameViewModel -->
+    <string name="player_o_turn">Player X turn</string>
 </resources>

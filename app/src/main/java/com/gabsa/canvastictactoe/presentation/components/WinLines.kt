@@ -20,7 +20,7 @@ fun VerticalWinLine(heightPosition: Float) {
     ) {
         drawLine(
             color = WinLineColor,
-            strokeWidth = 10f,
+            strokeWidth = 20f,
             cap = StrokeCap.Round,
             start = Offset(
                 x = 0f, y = heightPosition),
@@ -28,7 +28,6 @@ fun VerticalWinLine(heightPosition: Float) {
             )
     }
 }
-
 
 @Composable
 fun HorizontalWinLine(widthPosition: Float,  modifier: Modifier = Modifier) {
@@ -39,7 +38,7 @@ fun HorizontalWinLine(widthPosition: Float,  modifier: Modifier = Modifier) {
     ) {
         drawLine(
             color = WinLineColor,
-            strokeWidth = 10f,
+            strokeWidth = 20f,
             cap = StrokeCap.Round,
             start = Offset(x = widthPosition, y = 0f),
             end = Offset(x = widthPosition, y = size.width)
@@ -57,7 +56,7 @@ fun DiagonallyRightWinLine() {
         val canvasHeight = size.height
         drawLine(
             color = WinLineColor,
-            strokeWidth = 10f,
+            strokeWidth = 20f,
             cap = StrokeCap.Round,
             start = Offset(x = 0.dp.toPx(), y = 0f),
             end = Offset(x = canvasWidth, y = canvasHeight)
@@ -78,7 +77,7 @@ fun DiagonallyLeftWinLine(
         val canvasHeight = size.height
         drawLine(
             color = WinLineColor,
-            strokeWidth = 10f,
+            strokeWidth = 20f,
             cap = StrokeCap.Round,
             start = Offset(x = canvasWidth, y = 0f),
             end = Offset(x = 0.dp.toPx(), y = canvasHeight)
@@ -86,7 +85,7 @@ fun DiagonallyLeftWinLine(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun VerticalWinLinePreview() {
     DiagonallyLeftWinLine()

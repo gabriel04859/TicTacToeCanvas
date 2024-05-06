@@ -27,6 +27,16 @@ class GameViewModel : ViewModel() {
                 createBoardItems()
                 _state.value = GameStatus()
             }
+
+            is UserActions.ResetMatchButtonClicked -> {
+                createBoardItems()
+                _state.value =
+                    GameStatus(
+                        playerCircleCount = _state.value.playerCircleCount,
+                        playerCrossCount = _state.value.playerCrossCount,
+                        drawCount = _state.value.drawCount,
+                    )
+            }
         }
     }
 
@@ -149,6 +159,12 @@ class GameViewModel : ViewModel() {
     fun resetGame() {
         onBoardClicked(
             UserActions.PlayerAgainButtonClicked
+        )
+    }
+
+    fun resetMatch() {
+        onBoardClicked(
+            UserActions.ResetMatchButtonClicked
         )
     }
 }
