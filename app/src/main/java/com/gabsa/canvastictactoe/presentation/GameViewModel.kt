@@ -58,14 +58,16 @@ class GameViewModel : ViewModel() {
         }
 
         boardITens[cellPosition] = _state.value.currentTurn
-        if (isDrawGame()) {
-            return
-        }
 
         if (checkWinner() != PlayerWinner.NONE) {
             setWinnerInformation()
             return
         }
+
+        if (isDrawGame()) {
+            return
+        }
+
         _state.value = _state.value.copy(
             hintText = newHintText,
             currentTurn = newTurn
@@ -74,7 +76,7 @@ class GameViewModel : ViewModel() {
 
     private fun setWinnerInformation() {
         _state.value = _state.value.copy(
-            hintText = "${checkWinner().name} wins",
+            hintText = "${checkWinner().namePlayer} wins",
             hasWinner = true
         )
         countWinnerScore()

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -143,11 +142,7 @@ fun GameScreen(viewModel: GameViewModel) {
                 }
             }
         }
-        Text(
-            modifier = Modifier.wrapContentSize(),
-            text = state.hintText, fontSize = 24.sp, color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+        PlayerWinnerLabel(state.hintText)
 
         Row(
             modifier = Modifier
@@ -157,7 +152,7 @@ fun GameScreen(viewModel: GameViewModel) {
 
             ButtonMain({ viewModel.resetMatch() }, stringResource(id = R.string.game_screen_resent_game_match))
 
-            ButtonMain({ viewModel.resetGame() }, stringResource(id = R.string.game_screen_resent_game_button))
+            OutlineButtonMain({ viewModel.resetGame() }, stringResource(id = R.string.game_screen_resent_game_button))
 
         }
     }

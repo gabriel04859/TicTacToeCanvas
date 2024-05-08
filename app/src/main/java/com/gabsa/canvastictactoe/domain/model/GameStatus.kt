@@ -29,8 +29,8 @@ enum class VictoryType {
     NONE
 }
 
-enum class PlayerWinner {
-    CROSS_VICTORY,
-    CIRCLE_VICTORY,
-    NONE
+enum class PlayerWinner(val namePlayer: String) {
+    CROSS_VICTORY("Player X"),
+    CIRCLE_VICTORY("Player O"),
+    NONE("NONE")
 }
