@@ -16,7 +16,7 @@ fun Cross() {
     Canvas(
         modifier = Modifier
             .size(300.dp)
-            .padding(10.dp)
+            .padding(20.dp)
     ) {
         drawLine(
             color = CrossLineColor,

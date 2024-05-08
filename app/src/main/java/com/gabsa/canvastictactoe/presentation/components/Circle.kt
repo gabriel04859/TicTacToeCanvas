@@ -15,7 +15,7 @@ fun Circle() {
     Canvas(
         modifier = Modifier
             .size(300.dp)
-            .padding(10.dp)
+            .padding(20.dp)
     ) {
         drawCircle(
             color = CircleLineColor,
